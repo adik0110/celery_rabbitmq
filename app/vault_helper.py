@@ -39,8 +39,7 @@ class VaultHelper:
                 'password': 'password'
             },
             'apikeys': {
-                'newsapi': 'b94dc3b93369438ab00a346da90683a6',
-                'newsdata': 'pedik'
+                'kinopoisk': '4962088e-c67f-4117-9b05-bc4329727449'
             }
         }
 

@@ -9,10 +9,15 @@ def hello_task():
 
 @celery_app.task(name="api_request_task")
 def api_request_task(alias: str, q: str):
+    api_key = None
+    headers = {}
+
+    try:
+        api_key = vault_helper.get_api_key(alias)
+    except Exception as e:
+        print("апикей не нужен")
 
     if alias == 'newsapi':
-        api_key = vault_helper.get_api_key(alias)
-
         url = "https://newsapi.org/v2/everything"
         params = {
             "apikey": api_key,
@@ -47,8 +52,16 @@ def api_request_task(alias: str, q: str):
         }.get(result_code, "Неизвестный код ответа")
 
         return {"date": q, "day_type": result_word}
+    elif alias == 'kinopoisk':
+        url = "https://kinopoiskapiunofficial.tech/api/v2.1/films/search-by-keyword"
+        params = {
+            "keyword": q
+        }
+        headers = {
+            "X-API-KEY": api_key
+        }
     else:
         raise ValueError("Unknown alias")
 
-    response = requests.get(url, params=params)
+    response = requests.get(url, params=params, headers=headers)
     return response.json()
