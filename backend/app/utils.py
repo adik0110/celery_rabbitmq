@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 
 def build_broker_url() -> str:
     load_dotenv()
-    broker_host = os.getenv("BROKER_HOST", "localhost")
+    broker_host = os.getenv("BROKER_HOST", "rabbitmq.rabbitmq.svc.cluster.local")
     broker_port = os.getenv("BROKER_PORT", "5672")
     broker_user = os.getenv("BROKER_USER", "username")
     broker_password = os.getenv("BROKER_PASSWORD", "password")

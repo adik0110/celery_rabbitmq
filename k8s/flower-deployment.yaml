@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flower
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: flower
+  template:
+    metadata:
+      labels:
+        app: flower
+    spec:
+      containers:
+      - name: flower
+        image: treebyy/celery_rabbitmq:latest
+        command: ["celery"]
+        args:
+          - "flower"
+          - "--port=5555"
+          - "--broker=amqp://username:password@rabbitmq.rabbitmq.svc.cluster.local:5672/"
+        ports:
+          - containerPort: 5555
