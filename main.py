@@ -1,5 +1,9 @@
+from uuid import UUID
+
+from celery.result import AsyncResult
 from fastapi import FastAPI
 
+from app.celery_app import celery_app
 from app.tasks import hello_task
 
 app = FastAPI()
@@ -14,3 +18,12 @@ async def root():
 def hello_route():
     task = hello_task.delay()
     return {"task_id": task.id}
+
+@app.get("/api/task/check/{task_id}")
+def test_check_route(task_id: UUID):
+    task = AsyncResult(id=str(task_id), app=celery_app)
+    return {
+        "id": task.id,
+        "status": task.status,
+        "result": task.result
+    }
