@@ -9,23 +9,44 @@ def hello_task():
 
 @celery_app.task(name="api_request_task")
 def api_request_task(alias: str, q: str):
-    # Получаем API ключ по alias
 
-    api_key = vault_helper.get_api_key(alias)
-
-    # В зависимости от alias выбираем API
     if alias == 'newsapi':
+        api_key = vault_helper.get_api_key(alias)
+
         url = "https://newsapi.org/v2/everything"
         params = {
             "apikey": api_key,
             "q": q
         }
-    elif alias == 'newsdata':
-        url = "https://newsdata.org/api/1/latest"
+    elif alias == 'isdayoff':
+        try:
+            from datetime import datetime
+            date_obj = datetime.strptime(q, "%Y-%m-%d")
+            year = date_obj.year
+            month = date_obj.month
+            day = date_obj.day
+        except ValueError:
+            return {"error": "Invalid date format, expected YYYY-MM-DD"}
+
+        url = "https://isdayoff.ru/api/getdata"
         params = {
-            "apikey": api_key,
-            "q": q
+            "year": year,
+            "month": month,
+            "day": day
         }
+
+        response = requests.get(url, params=params)
+        result_code = response.json()
+        result_word = {
+            0: "Рабочий день",
+            1: "Нерабочий день",
+            2: "Сокращённый рабочий день",
+            4: "Рабочий день",
+            100: "Ошибка в дате",
+            101: "Данные не найдены",
+        }.get(result_code, "Неизвестный код ответа")
+
+        return {"date": q, "day_type": result_word}
     else:
         raise ValueError("Unknown alias")
 
