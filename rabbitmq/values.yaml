@@ -1,25 +1,6 @@
 auth:
-  # username: ref+vault:/secrets/rabbitmq#username
-  # password: ref+vault:/secrets/rabbitmq#password
-  username: username
-  password: password
-
-# ingress:
-#   enabled: false
-#   hosts:
-#     - host: rabbitmq.itis-3k-cloud.ru
-#       paths:
-#         - path: /
-#           pathType: Prefix
-#   annotations:
-#     cert-manager.io/cluster-issuer: "http01-clusterissuer"
-#   className: nginx
-#   tls:
-#     - hosts:
-#         - rabbitmq.itis-3k-cloud.ru
-#       secretName: rabbitmq.itis-3k-cloud.ru-tls
+   username: ref+vault:/secrets/rabbitmq#username
+   password: ref+vault:/secrets/rabbitmq#password
 
 service:
   type: LoadBalancer
-  # annotations:
-  #   external-dns.alpha.kubernetes.io/hostname: ampq.rabbitmq.itis-3k-cloud.ru

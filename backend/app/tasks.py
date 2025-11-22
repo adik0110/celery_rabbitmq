@@ -17,13 +17,7 @@ def api_request_task(alias: str, q: str):
     except Exception as e:
         print("апикей не нужен")
 
-    if alias == 'newsapi':
-        url = "https://newsapi.org/v2/everything"
-        params = {
-            "apikey": api_key,
-            "q": q
-        }
-    elif alias == 'isdayoff':
+    if alias == 'isdayoff':
         try:
             from datetime import datetime
             date_obj = datetime.strptime(q, "%Y-%m-%d")
